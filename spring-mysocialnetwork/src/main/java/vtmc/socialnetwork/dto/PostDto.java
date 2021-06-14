@@ -1,14 +1,19 @@
 package vtmc.socialnetwork.dto;
 
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class PostDto {
 	
 	private String userName;
 	private byte[] userPhoto;
-	private Date date;
+	private String date;
 	private String text;
 	private byte[] photo;
+	private int likes;
+	private List<CommentDto> comments;
 	
 	public PostDto(){}
 	
@@ -44,13 +49,31 @@ public class PostDto {
 		this.userPhoto = userPhoto;
 	}
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
+
+	public int getLikes() {
+		return likes;
+	}
+
+	public void setLikes(int likes) {
+		this.likes = likes;
+	}
+
+	public List<CommentDto> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentDto> comments) {
+		this.comments = comments;
+	}
+	
+	
 	
 	
 	

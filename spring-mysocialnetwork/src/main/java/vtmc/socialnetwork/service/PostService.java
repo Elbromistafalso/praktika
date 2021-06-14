@@ -1,10 +1,19 @@
 package vtmc.socialnetwork.service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -14,10 +23,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import vtmc.socialnetwork.dao.CommentDao;
 import vtmc.socialnetwork.dao.PostDao;
 import vtmc.socialnetwork.dao.UserDao;
+import vtmc.socialnetwork.domain.Comment;
 import vtmc.socialnetwork.domain.Post;
 import vtmc.socialnetwork.domain.User;
+import vtmc.socialnetwork.dto.CommentDto;
 import vtmc.socialnetwork.dto.LikesDto;
 import vtmc.socialnetwork.dto.PostDto;
 import vtmc.socialnetwork.dto.UserImageDto;
@@ -28,6 +40,8 @@ public class PostService {
 	
 	@Autowired
 	private PostDao postDao;
+	@Autowired
+	private CommentDao commentDao;
 	@Autowired
 	private UserDao userDao;
 	
@@ -51,9 +65,6 @@ public class PostService {
 		post.setDate(java.util.Date.from(LocalDateTime.now()
 			      .atZone(ZoneId.systemDefault())
 			      .toInstant()));
-		System.out.println("date: " + java.util.Date.from(LocalDateTime.now()
-			      .atZone(ZoneId.systemDefault())
-			      .toInstant()));
 		post.setText(text);
 		try {
 			post.setPicture(photo.getBytes());
@@ -63,7 +74,21 @@ public class PostService {
 		postDao.save(post);
 		return new ResponseEntity<>("The poster " + post.getPoster().getUserName() + 
 				"created post with id " + post.getId() + " was created", HttpStatus.OK);
-	}	
+	}
+	
+    public ResponseEntity<?> createComment(String userName, Long postId, CommentDto commentDto){
+		
+		User user = userDao.getOne(userName);
+		Post post = postDao.getOne(postId);
+		Comment comment = new Comment();
+		comment.setUserName(user.getUserName());
+		comment.setUserPhoto(user.getUserPhoto());
+		comment.setText(commentDto.getText());
+		post.addComment(comment);
+		commentDao.save(comment);
+		
+		return new ResponseEntity<>("The comment was saved", HttpStatus.OK);
+	}
 	
 	public ResponseEntity<?> saveFile(MultipartFile file){
 		Post post = new Post();
@@ -84,22 +109,24 @@ public class PostService {
 		PostDto postDto = new PostDto();
 		postDto.setUserName(post.getPoster().getUserName());
 		postDto.setUserPhoto(post.getPoster().getUserPhoto());
-		postDto.setDate(post.getDate());
+		Date date = post.getDate();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String dateString = format.format(date);
+		postDto.setDate(dateString);
+		postDto.setLikes(post.getLikes().size());
+		List<Comment> comments = commentDao.findAll().stream()
+		  .filter(comment -> comment.getPost().getId() == post.getId()).collect(Collectors.toList());
+		List<CommentDto> commentsDto = comments.stream().map(comment -> new CommentDto(comment.getUserName(), comment.getUserPhoto(),
+				comment.getText())).collect(Collectors.toList());
+		postDto.setComments(commentsDto);
+		
 		postDto.setText(post.getText());
 		postDto.setPhoto(post.getPicture());
 		return postDto;
 		
 	}
 	
-//    public PostDto getPostWithPhoto() {
-//		
-//		Post post = postDao.getOne(1L);
-//		PostDto postDto = new PostDto();
-//		postDto.setText(post.getText());
-//		postDto.setPhoto(post.getPicture());
-//		return postDto;
-//		
-//	}
+
 	
 	
 	

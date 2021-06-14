@@ -16,6 +16,12 @@ class LoggedInContainer extends Component{
             firstPostUsername: "",
             firstPostUserPhoto: "",
             firstPostDate: "",
+            firstPostLikes: "",
+            commentText: "",
+            firstCommentUsername: "",
+            firstCommentPhoto: "",
+            firstCommentText: ""
+            
             
         }
     }
@@ -36,7 +42,10 @@ class LoggedInContainer extends Component{
                 this.setState({firstPostUsername: res.data.userName})
                 this.setState({firstPostUserPhoto: res.data.userPhoto})
                 this.setState({firstPostDate: res.data.date})
+                this.setState({firstPostLikes: res.data.likes})
             });
+            
+            
         }
         
     }
@@ -56,6 +65,53 @@ class LoggedInContainer extends Component{
             
             })
     };
+
+
+    handleLikes = (e) => {
+        e.preventDefault();
+        
+        axios.post("http://localhost:8080/post/addLike/1/" + this.props.location.state.userName)
+            .then(res => {
+           
+             axios.get("http://localhost:8080/post/1/likes")
+            .then(res => {
+                  this.setState({firstPostLikes: res.data.likes});
+            
+            })
+            
+            })
+        
+        
+    }
+    
+    handleCommentChange = (e) => {
+        e.preventDefault();
+        this.setState({commentText: e.target.value})
+        
+        
+    }
+    
+    handleComments = (e) => {
+        e.preventDefault();
+        
+        let comment = {
+            text: this.state.commentText
+        }
+        
+       axios.post("http://localhost:8080/comment/" + this.props.location.state.userName + "/create/1", comment)
+            .then(res => {
+            
+           axios.get("http://localhost:8080/getPost")
+              .then(res => {
+                this.setState({firstCommentUsername: res.data.comments[0].userName})
+                this.setState({firstCommentPhoto: res.data.comments[0].userPhoto})
+                this.setState({firstCommentText: res.data.comments[0].text})
+            });
+            
+            })
+        
+        
+    }
     
     render(){
         
@@ -85,9 +141,27 @@ class LoggedInContainer extends Component{
                       <img style={{width: 40, height: 50}} src={"data:image/png;base64,"+this.state.firstPostUserPhoto}/>
                       <span style={{alignSelf: "flex-end"}} className="pt-1">{this.state.firstPostUsername}</span>
                       <span>{this.state.firstPostDate}</span>
+                      <button className="btn btn-primary" onClick={this.handleLikes}>Pamėgti</button>
+                      <span>{this.state.firstPostLikes}</span>
                     </div>
                     <img style={{width: 240, height: 300}} src={"data:image/png;base64,"+this.state.firstPostPhoto}/>
                     <p style={{ whiteSpace: 'pre-wrap' }}>{this.state.firstPostText}</p>
+                    <form onSubmit={this.handleComments}>
+                    <label>
+                    Pranešimo tekstas:
+                    <textarea value={this.state.commentText} style={{width: "500px", height: "300px"}} onChange={this.handleCommentChange} />
+                    </label>
+                    <input type="submit" value="Submit" />
+                    </form>
+                </div>
+              </div>
+               <div className="row">
+                <div className="col">
+                    <div className="border d-flex">
+                      <img style={{width: 40, height: 50}} src={"data:image/png;base64,"+this.state.firstCommentPhoto}/>
+                      <span style={{alignSelf: "flex-end"}} className="pt-1">{this.state.firstCommentUsername}</span>
+                    </div>
+                    <p style={{ whiteSpace: 'pre-wrap' }}>{this.state.firstCommentText}</p>
                 </div>
               </div>
             </div>

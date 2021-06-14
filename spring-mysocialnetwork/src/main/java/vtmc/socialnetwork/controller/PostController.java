@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import vtmc.socialnetwork.dto.CommentDto;
 import vtmc.socialnetwork.dto.LikesDto;
 import vtmc.socialnetwork.dto.PostDto;
 import vtmc.socialnetwork.dto.UserImageDto;
@@ -55,7 +56,7 @@ public class PostController {
         return postService.addLike(userName, postId);
     }
 	
-	@RequestMapping(path = "/post{postId}/likes", method = RequestMethod.GET)
+	@RequestMapping(path = "/post/{postId}/likes", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
     public LikesDto getLikes(@PathVariable final long postId) {
         return postService.getLikes(postId);
@@ -73,6 +74,12 @@ public class PostController {
 		return postService.getUserImage(postId);
 	}
 	
+	@RequestMapping(path = "/comment/{userName}/create/{postId}", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> createComment(@PathVariable String userName, @PathVariable Long postId,
+    		@RequestBody CommentDto commentDto) {
+        return postService.createComment(userName, postId, commentDto);
+    }
 	
 
 }

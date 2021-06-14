@@ -1,8 +1,9 @@
 package vtmc.socialnetwork.domain;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,6 +39,9 @@ public class Post {
 	 
 	 @ManyToMany(mappedBy = "likedPosts")
 	 Set<User> likes = new HashSet<>();;
+	 
+	 @OneToMany(mappedBy = "post")
+	 private List<Comment> comments = new ArrayList<>();
 	 
 	 public Post() {}
 	 
@@ -83,6 +88,11 @@ public class Post {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	
+	public void addComment(Comment comment){
+		this.comments.add(comment);
+		comment.setPost(this);
 	}
 	 
 	 
