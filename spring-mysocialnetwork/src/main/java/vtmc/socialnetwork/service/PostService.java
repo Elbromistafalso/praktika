@@ -62,9 +62,12 @@ public class PostService {
 		User user = userDao.getOne(userName);
 		Post post = new Post();
 		post.setPoster(user); 
-		post.setDate(java.util.Date.from(LocalDateTime.now()
+		Date date = java.util.Date.from(LocalDateTime.now()
 			      .atZone(ZoneId.systemDefault())
-			      .toInstant()));
+			      .toInstant());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String dateString = format.format(date);
+		post.setDate(dateString);
 		post.setText(text);
 		try {
 			post.setPicture(photo.getBytes());
@@ -74,6 +77,14 @@ public class PostService {
 		postDao.save(post);
 		return new ResponseEntity<>("The poster " + post.getPoster().getUserName() + 
 				"created post with id " + post.getId() + " was created", HttpStatus.OK);
+	}
+	
+	public ResponseEntity<?> deletePost(Long postId){
+		
+		Post post = postDao.getOne(postId);
+		postDao.delete(post);
+		return new ResponseEntity<>("The post " + post.getId() + " was deleted", HttpStatus.OK);
+		
 	}
 	
     public ResponseEntity<?> createComment(String userName, Long postId, CommentDto commentDto){
@@ -109,10 +120,7 @@ public class PostService {
 		PostDto postDto = new PostDto();
 		postDto.setUserName(post.getPoster().getUserName());
 		postDto.setUserPhoto(post.getPoster().getUserPhoto());
-		Date date = post.getDate();
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String dateString = format.format(date);
-		postDto.setDate(dateString);
+		postDto.setDate(post.getDate());
 		postDto.setLikes(post.getLikes().size());
 		List<Comment> comments = commentDao.findAll().stream()
 		  .filter(comment -> comment.getPost().getId() == post.getId()).collect(Collectors.toList());
@@ -124,6 +132,18 @@ public class PostService {
 		postDto.setPhoto(post.getPicture());
 		return postDto;
 		
+	}
+	
+	public List<PostDto> getPosts(){
+		
+		List<Post> posts = postDao.findAll();
+		List<PostDto> postDtos = posts.stream().map(post ->
+			
+			new PostDto(post.getId(), post.getPoster().getUserName(),
+				post.getPoster().getUserPhoto(), post.getDate(), post.getText(),post.getPicture(), post.getLikes().size()))
+				.collect(Collectors.toList());
+		
+		return postDtos;
 	}
 	
 
@@ -155,6 +175,7 @@ public class PostService {
 		 
 		 if(user != null && post != null) {
 		 user.addLikedPost(post);
+		 userDao.save(user);
 		 return new ResponseEntity<>("now this post has " + post.getLikes().size() + " likes.", HttpStatus.OK);
 		 }
 		 

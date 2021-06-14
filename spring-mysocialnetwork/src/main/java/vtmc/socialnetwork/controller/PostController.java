@@ -1,5 +1,7 @@
 package vtmc.socialnetwork.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -44,10 +46,22 @@ public class PostController {
         return postService.createPost(userName, text, file);
     }
 	
+	@RequestMapping(path = "/post/delete/{postId}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
+        return postService.deletePost(postId);
+    }
+	
 	@RequestMapping(path = "/getPost", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
     public PostDto getPost() {
         return postService.getPost();
+    }
+	
+	@RequestMapping(path = "/posts", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+    public List<PostDto> getPosts() {
+        return postService.getPosts();
     }
 	
 	@RequestMapping(path = "/post/addLike/{postId}/{userName}", method = RequestMethod.POST)

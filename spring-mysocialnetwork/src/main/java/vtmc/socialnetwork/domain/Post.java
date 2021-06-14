@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,13 +32,12 @@ public class Post {
 	 
 	 @Lob
 	 private byte[] picture;
-	 
-	 @Temporal(TemporalType.TIMESTAMP)
-	 private Date date;
+	
+	 private String date;
 	 
 	 private String text;
 	 
-	 @ManyToMany(mappedBy = "likedPosts")
+	 @ManyToMany(cascade = CascadeType.ALL, mappedBy = "likedPosts")
 	 Set<User> likes = new HashSet<>();;
 	 
 	 @OneToMany(mappedBy = "post")
@@ -82,11 +82,11 @@ public class Post {
 		 this.text = text;
 	 }
 
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	

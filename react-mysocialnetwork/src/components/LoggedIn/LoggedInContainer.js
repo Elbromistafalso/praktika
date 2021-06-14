@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {withRouter} from 'react-router-dom';
 import axios from "axios";
+import PostList from '../PostList/PostList';
 
 class LoggedInContainer extends Component{
     
@@ -20,7 +21,8 @@ class LoggedInContainer extends Component{
             commentText: "",
             firstCommentUsername: "",
             firstCommentPhoto: "",
-            firstCommentText: ""
+            firstCommentText: "",
+            posts: []
             
             
         }
@@ -44,6 +46,8 @@ class LoggedInContainer extends Component{
                 this.setState({firstPostDate: res.data.date})
                 this.setState({firstPostLikes: res.data.likes})
             });
+            axios.get("http://localhost:8080/posts")
+                .then(res => {this.setState({posts: res.data})});
             
             
         }
@@ -70,14 +74,11 @@ class LoggedInContainer extends Component{
     handleLikes = (e) => {
         e.preventDefault();
         
-        axios.post("http://localhost:8080/post/addLike/1/" + this.props.location.state.userName)
+        axios.post("http://localhost:8080/post/addLike/"+ e.target.value + "/" + this.props.location.state.userName)
             .then(res => {
            
-             axios.get("http://localhost:8080/post/1/likes")
-            .then(res => {
-                  this.setState({firstPostLikes: res.data.likes});
-            
-            })
+              axios.get("http://localhost:8080/posts")
+                .then(res => {this.setState({posts: res.data})});
             
             })
         
@@ -113,6 +114,16 @@ class LoggedInContainer extends Component{
         
     }
     
+    handlePostDelete = (e) => {
+        e.preventDefault();
+        
+        axios.delete("http://localhost:8080/post/delete/" + e.target.value)
+         .then(res => {
+              axios.get("http://localhost:8080/posts")
+                .then(res => {this.setState({posts: res.data})});                    
+        })
+    }
+    
     render(){
         
         return(
@@ -135,35 +146,12 @@ class LoggedInContainer extends Component{
                   </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="col">
-                    <div className="border d-flex">
-                      <img style={{width: 40, height: 50}} src={"data:image/png;base64,"+this.state.firstPostUserPhoto}/>
-                      <span style={{alignSelf: "flex-end"}} className="pt-1">{this.state.firstPostUsername}</span>
-                      <span>{this.state.firstPostDate}</span>
-                      <button className="btn btn-primary" onClick={this.handleLikes}>Pamėgti</button>
-                      <span>{this.state.firstPostLikes}</span>
-                    </div>
-                    <img style={{width: 240, height: 300}} src={"data:image/png;base64,"+this.state.firstPostPhoto}/>
-                    <p style={{ whiteSpace: 'pre-wrap' }}>{this.state.firstPostText}</p>
-                    <form onSubmit={this.handleComments}>
-                    <label>
-                    Pranešimo tekstas:
-                    <textarea value={this.state.commentText} style={{width: "500px", height: "300px"}} onChange={this.handleCommentChange} />
-                    </label>
-                    <input type="submit" value="Submit" />
-                    </form>
-                </div>
-              </div>
-               <div className="row">
-                <div className="col">
-                    <div className="border d-flex">
-                      <img style={{width: 40, height: 50}} src={"data:image/png;base64,"+this.state.firstCommentPhoto}/>
-                      <span style={{alignSelf: "flex-end"}} className="pt-1">{this.state.firstCommentUsername}</span>
-                    </div>
-                    <p style={{ whiteSpace: 'pre-wrap' }}>{this.state.firstCommentText}</p>
-                </div>
-              </div>
+              <PostList
+                posts={this.state.posts}
+                userName={this.state.userName}
+                onLikesUpdate={this.handleLikes}
+                onPostDelete={this.handlePostDelete}
+              />
             </div>
         );
     }

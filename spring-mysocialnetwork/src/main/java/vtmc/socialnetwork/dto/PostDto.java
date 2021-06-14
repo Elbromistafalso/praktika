@@ -7,6 +7,8 @@ import java.util.List;
 
 public class PostDto {
 	
+	
+	private Long id;
 	private String userName;
 	private byte[] userPhoto;
 	private String date;
@@ -17,6 +19,29 @@ public class PostDto {
 	
 	public PostDto(){}
 	
+	
+	
+	public PostDto(Long id, String userName, byte[] userPhoto, String date, String text, byte[] photo, int likes) {
+		super();
+		this.id = id;
+		this.userName = userName;
+		this.userPhoto = userPhoto;
+		this.date = date;
+		this.text = text;
+		this.photo = photo;
+		this.likes = likes;
+	}
+
+
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getText() {
 		return this.text;
 	}
