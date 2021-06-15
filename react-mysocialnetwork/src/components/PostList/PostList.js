@@ -5,6 +5,8 @@ let PostList = ({
     posts,
     onLikesUpdate,
     onPostDelete,
+    onPostEdit,
+    onComment,
     userName
 }) => {
     
@@ -22,8 +24,11 @@ let PostList = ({
                      nrOfLikes={post.likes}
                      postText={post.text}
                      postPhoto={post.photo}
+                     comments={post.comments}
                      onLikesUpdate={onLikesUpdate}
                      onPostDelete={onPostDelete}
+                     onPostEdit={onPostEdit}
+                     onComment={onComment}
                     />
            
           })

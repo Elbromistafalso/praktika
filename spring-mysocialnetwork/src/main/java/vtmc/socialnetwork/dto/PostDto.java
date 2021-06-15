@@ -21,7 +21,8 @@ public class PostDto {
 	
 	
 	
-	public PostDto(Long id, String userName, byte[] userPhoto, String date, String text, byte[] photo, int likes) {
+	public PostDto(Long id, String userName, byte[] userPhoto, String date, String text, byte[] photo, int likes,
+			List<CommentDto> comments) {
 		super();
 		this.id = id;
 		this.userName = userName;
@@ -30,6 +31,7 @@ public class PostDto {
 		this.text = text;
 		this.photo = photo;
 		this.likes = likes;
+		this.comments = comments;
 	}
 
 

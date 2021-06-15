@@ -52,10 +52,17 @@ public class PostController {
         return postService.deletePost(postId);
     }
 	
-	@RequestMapping(path = "/getPost", method = RequestMethod.GET)
+	@RequestMapping(path = "/post/update/{postId}", method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-    public PostDto getPost() {
-        return postService.getPost();
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestParam("text") String text,
+    		@RequestParam("photo") MultipartFile file) {
+        return postService.updatePost(postId, text, file);
+    }	
+	
+	@RequestMapping(path = "/getPost/{postId}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+    public PostDto getPost(@PathVariable Long postId) {
+        return postService.getPost(postId);
     }
 	
 	@RequestMapping(path = "/posts", method = RequestMethod.GET)

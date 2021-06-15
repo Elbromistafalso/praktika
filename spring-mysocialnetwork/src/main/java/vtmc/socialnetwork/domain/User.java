@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
@@ -28,12 +29,8 @@ public class User {
     @Lob
     private byte[] userPhoto;
     
-    @ManyToMany
-    @JoinTable(
-    name = "course_like", 
-    joinColumns = @JoinColumn(name = "user_id"), 
-    inverseJoinColumns = @JoinColumn(name = "post_id"))
-    Set<Post> likedPosts = new HashSet<>();
+    @ElementCollection
+    Set<Long> likedPosts = new HashSet<>();
     
 	public User(String userName, String password) {
 		super();
@@ -45,11 +42,11 @@ public class User {
 	
 	public void addLikedPost(Post post) {
 		
-		this.likedPosts.add(post);
-		post.getLikes().add(this);
+		this.likedPosts.add(post.getId());
+		post.getLikes().add(this.userName);
 	}
 	
-	public Set<Post> getLikedPosts(){
+	public Set<Long> getLikedPosts(){
 		return this.likedPosts;
 	}
 

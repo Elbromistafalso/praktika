@@ -2,22 +2,24 @@ import React from "react";
 import Proptypes from "prop-types";
 
 let PostCreationComponent = ({
+    postId,
     postText,
     onTextChange,
     onPhotoChange,
-    onSubmit
+    onSubmit,
+    onUpdate
 }) => {
     
     return (
         <div className="container">
           <div className="row">
             <div className="col">
-              <form onSubmit={onSubmit}>
+              <form onSubmit={postId === undefined ? onSubmit : onUpdate}>
                 <label>
                     Pranešimo tekstas:
                     <textarea value={postText} style={{width: "500px", height: "300px"}} onChange={onTextChange} />
                  </label>
-                 <input type="submit" value="Submit" />
+                 <input type="submit" value={postId === undefined ? "Sukurti" : "Atnaujinti"}/>
               </form>
             </div>
             <div className="col">

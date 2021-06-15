@@ -94,22 +94,7 @@ class LoggedInContainer extends Component{
     
     handleComments = (e) => {
         e.preventDefault();
-        
-        let comment = {
-            text: this.state.commentText
-        }
-        
-       axios.post("http://localhost:8080/comment/" + this.props.location.state.userName + "/create/1", comment)
-            .then(res => {
-            
-           axios.get("http://localhost:8080/getPost")
-              .then(res => {
-                this.setState({firstCommentUsername: res.data.comments[0].userName})
-                this.setState({firstCommentPhoto: res.data.comments[0].userPhoto})
-                this.setState({firstCommentText: res.data.comments[0].text})
-            });
-            
-            })
+        this.props.history.push({pathname:"/CommentCreation", state: {userName: this.state.userName, postId: e.target.value}})
         
         
     }
@@ -122,6 +107,13 @@ class LoggedInContainer extends Component{
               axios.get("http://localhost:8080/posts")
                 .then(res => {this.setState({posts: res.data})});                    
         })
+    }
+    
+    handlePostEdit = (e) => {
+        e.preventDefault();
+        this.props.history.push({pathname:"/postCreation", state: {userName: this.state.userName, postId: e.target.value}})
+        
+        
     }
     
     render(){
@@ -151,6 +143,8 @@ class LoggedInContainer extends Component{
                 userName={this.state.userName}
                 onLikesUpdate={this.handleLikes}
                 onPostDelete={this.handlePostDelete}
+                onPostEdit={this.handlePostEdit}
+                onComment={this.handleComments}
               />
             </div>
         );

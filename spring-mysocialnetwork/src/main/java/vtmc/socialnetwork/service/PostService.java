@@ -79,6 +79,20 @@ public class PostService {
 				"created post with id " + post.getId() + " was created", HttpStatus.OK);
 	}
 	
+	public ResponseEntity<?> updatePost(Long postId, String text, MultipartFile photo){
+		
+		Post post = postDao.getOne(postId);
+		post.setText(text);
+		try {
+			post.setPicture(photo.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		postDao.save(post);
+		return new ResponseEntity<>("The post " + post.getPoster().getUserName() + 
+				" with id " + post.getId() + " was updated", HttpStatus.OK);
+	}	
+	
 	public ResponseEntity<?> deletePost(Long postId){
 		
 		Post post = postDao.getOne(postId);
@@ -114,9 +128,9 @@ public class PostService {
 		
 	}
 	
-	public PostDto getPost() {
+	public PostDto getPost(Long postid) {
 		
-		Post post = postDao.getOne(1L);
+		Post post = postDao.getOne(postid);
 		PostDto postDto = new PostDto();
 		postDto.setUserName(post.getPoster().getUserName());
 		postDto.setUserPhoto(post.getPoster().getUserPhoto());
@@ -124,7 +138,8 @@ public class PostService {
 		postDto.setLikes(post.getLikes().size());
 		List<Comment> comments = commentDao.findAll().stream()
 		  .filter(comment -> comment.getPost().getId() == post.getId()).collect(Collectors.toList());
-		List<CommentDto> commentsDto = comments.stream().map(comment -> new CommentDto(comment.getUserName(), comment.getUserPhoto(),
+		List<CommentDto> commentsDto = comments.stream().map(comment -> new CommentDto(comment.getId(),
+				comment.getUserName(), comment.getUserPhoto(),
 				comment.getText())).collect(Collectors.toList());
 		postDto.setComments(commentsDto);
 		
@@ -140,7 +155,8 @@ public class PostService {
 		List<PostDto> postDtos = posts.stream().map(post ->
 			
 			new PostDto(post.getId(), post.getPoster().getUserName(),
-				post.getPoster().getUserPhoto(), post.getDate(), post.getText(),post.getPicture(), post.getLikes().size()))
+				post.getPoster().getUserPhoto(), post.getDate(), post.getText(),post.getPicture(), post.getLikes().size(),
+				post.getCommentDto()))
 				.collect(Collectors.toList());
 		
 		return postDtos;
