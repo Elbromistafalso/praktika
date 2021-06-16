@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {withRouter} from 'react-router-dom';
 import axios from "axios";
 import CommentCreationComponent from './CommentCreationComponent';
+import Header from '../Header'
 
 class CommentCreationContainer extends Component{
     
@@ -10,6 +11,7 @@ class CommentCreationContainer extends Component{
         this.state = {
             
             userName: this.props.location.state.userName,
+            image: this.props.location.state.image,
             postId: this.props.location.state.postId,
             commentText: ""
             
@@ -55,12 +57,19 @@ class CommentCreationContainer extends Component{
     render(){
         
         return(
+          <div>
+            <Header
+             userName={this.state.userName}
+             image={this.state.image}
+             onChangeImage={this.onFileChangeHandler}
+            />            
             <CommentCreationComponent
               postId={this.state.postId}
               commentText={this.state.commentText}
               onTextChange={this.handleChange}
               onSubmit={this.handleSubmit}
             />
+          </div>    
         )
     }
     

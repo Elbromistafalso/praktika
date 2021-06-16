@@ -1,5 +1,7 @@
 import React from "react";
 import CommentList from '../CommentList/CommentList';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faThumbsUp, faComments } from '@fortawesome/free-solid-svg-icons'
 
 let Post = ({
     currentUser,
@@ -30,9 +32,12 @@ let Post = ({
                         : null}
                       {currentUser === userName ? <button className="btn btn-primary" onClick={onPostEdit} value={id}>Redaguoti</button>
                         : null}
+                      <FontAwesomeIcon icon={faThumbsUp}/>
                       <span>{nrOfLikes}</span>
+                      <FontAwesomeIcon icon={faComments} />
+                      <span>{comments.length}</span>
                     </div>
-                    <img style={{width: 240, height: 300}} src={"data:image/png;base64,"+ postPhoto}/>
+                    {postPhoto !== null ? <img style={{width: 240, height: 300}} src={"data:image/png;base64,"+ postPhoto}/> : null}
                     <p style={{ whiteSpace: 'pre-wrap' }}>{postText}</p>
            
                                <CommentList

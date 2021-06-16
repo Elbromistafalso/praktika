@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {withRouter} from 'react-router-dom';
 import axios from "axios";
 import PostList from '../PostList/PostList';
+import Header from '../Header'
 
 class LoggedInContainer extends Component{
     
@@ -98,7 +99,7 @@ class LoggedInContainer extends Component{
     
     handleComments = (e) => {
         e.preventDefault();
-        this.props.history.push({pathname:"/CommentCreation", state: {userName: this.state.userName, postId: e.target.value}})
+        this.props.history.push({pathname:"/CommentCreation", state: {userName: this.state.userName, postId: e.target.value,  image: this.state.image }})
         
         
     }
@@ -165,43 +166,12 @@ class LoggedInContainer extends Component{
         return(
             
             <div className="container">
-              <div className="row">
-            
-                <form className="form" onSubmit={this.handeSearch}>
-                <div className="form-group">
-                <label htmlFor="parameter">Paieška pagal</label>
-                <select value={this.state.chosenSearchOption} onChange={this.handleSearchOptionChange}>
-                  <option value="searchByUsername">vartotojo vardą</option>
-                  <option value="searchByContent">pranešimo turinį</option>
-                 </select>
-                <input
-                name="parameter"
-                value={this.state.searchParameter}
-                onChange={this.onSearchParameterChange}
-                ></input>
-                </div>
-
-               <button className="btn btn-primary mb-4">
-               Ieškoti
-               </button>
-               </form>
-            
-                <div className="col-3">
-                  <input id="photoUpload" type="file" className="form-control" name="file" onChange={this.onFileChangeHandler}/>
-                </div>
-                <div className="col text-right">
-                    <img style={{width: 80, height: 100}} src={"data:image/png;base64,"+this.state.image}/>
-                  <p>{this.state.userName}</p>
-                </div>
-                </div>
-                <div className="row">
-                <div className="col text-right">
-                  <div>
-                    <button className="btn btn-primary" onClick={() => {this.props.history.push("/")}}>Atsijungti</button>
-                    <button className="btn btn-primary" onClick={() => {this.props.history.push({pathname:"/postCreation", state: {userName: this.state.userName}})}}>Naujas pranešimas</button>
-                  </div>
-                </div>
-              </div>
+            <Header
+             history= {this.props.history}
+             userName={this.state.userName}
+             image={this.state.image}
+             onChangeImage={this.onFileChangeHandler}
+            />
               {this.state.specificUserNamePostsNotFound && (
                 <div className="alert alert-danger col-12" role="alert">
                   Nerasta jokių {this.state.searchParameter} vartotojo pranešimų arba toks vartotojas neegzistuoja
@@ -212,6 +182,19 @@ class LoggedInContainer extends Component{
                   Nerasta jokių pranešimų su ieškotu turiniu
                 </div>
               )}
+
+                <form className="form" onSubmit={this.handeSearch}>
+                  <div className="form-group">
+                    <label htmlFor="parameter">Pranešimų paieška pagal</label>
+                    <select className="mx-2" value={this.state.chosenSearchOption} onChange={this.handleSearchOptionChange}>
+                      <option value="searchByUsername">vartotojo vardą</option>
+                      <option value="searchByContent">pranešimo turinį</option>
+                    </select>
+                    <input name="parameter" value={this.state.searchParameter} onChange={this.onSearchParameterChange}></input>
+                <   button className="btn btn-primary mb-3 mx-1">Ieškoti</button>
+                    <button className="btn btn-primary mb-3" onClick={() => {this.props.history.push({pathname:"/postCreation", state: {userName: this.state.userName, image: this.state.image}})}}>Naujas pranešimas</button>
+                  </div>
+               </form>
 
               <PostList
                 posts={this.state.posts}

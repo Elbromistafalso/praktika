@@ -4,6 +4,8 @@ import Proptypes from "prop-types";
 let PostCreationComponent = ({
     postId,
     postText,
+    photo,
+    noText,
     onTextChange,
     onPhotoChange,
     onSubmit,
@@ -14,7 +16,7 @@ let PostCreationComponent = ({
         <div className="container">
           <div className="row">
             <div className="col">
-              <form onSubmit={postId === undefined ? onSubmit : onUpdate}>
+              <form onSubmit={postId === undefined ? onSubmit : onUpdate}>        
                 <label>
                     Pranešimo tekstas:
                     <textarea value={postText} style={{width: "500px", height: "300px"}} onChange={onTextChange} />
@@ -24,10 +26,14 @@ let PostCreationComponent = ({
             </div>
             <div className="col">
               <div className="form-group files color">
-                <label>Pasirinkti nuotrauką:</label>
                 <input type="file" className="form-control" name="photo" onChange={onPhotoChange}/>
               </div>
             </div>
+                {noText && (
+                  <div className="alert alert-danger col-12 m-4" role="alert">
+                Pranešimo tekstas yra privalomas
+                </div>
+              )}
           </div>
         </div>
     )

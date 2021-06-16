@@ -50,7 +50,12 @@ public class PostService {
 		User user = userDao.getOne(userName);
 		Post post = new Post();
 		post.setPoster(user);
-		System.out.println("text of post is: " + postDto.getText());
+		Date date = java.util.Date.from(LocalDateTime.now()
+			      .atZone(ZoneId.systemDefault())
+			      .toInstant());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String dateString = format.format(date);
+		post.setDate(dateString);
 		post.setText(postDto.getText());
 		postDao.save(post);
 		return new ResponseEntity<>("The poster " + post.getPoster().getUserName() + 

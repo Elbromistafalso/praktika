@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {withRouter} from 'react-router-dom';
 import axios from "axios";
 import PostCreationComponent from './PostCreationComponent';
+import Header from '../Header'
 
 class PostCreationContainer extends Component{
     
@@ -10,9 +11,11 @@ class PostCreationContainer extends Component{
         this.state = {
             
             userName: this.props.location.state.userName,
+            image: this.props.location.state.image,
             postId: this.props.location.state.postId,
             postText: "",
-            photo: ""
+            photo: "",
+            noText: false
             
         }
     }
@@ -58,6 +61,10 @@ class PostCreationContainer extends Component{
     handleSubmit = (e) => {
       e.preventDefault();
         
+      if(this.state.postText === ""){
+          this.setState({noText: true})
+      }else{ 
+        
         
       if(this.state.photo !== ""){
           
@@ -92,10 +99,16 @@ class PostCreationContainer extends Component{
       });
           
       }
+          
+      }
   }
     
     handleUpdate = (e) => {
       e.preventDefault();
+        
+      if(this.state.postText === ""){
+          this.setState({noText: true})
+      }else{         
         
         
       if(this.state.photo !== ""){
@@ -132,6 +145,7 @@ class PostCreationContainer extends Component{
           
       }        
         
+      }
         
     }
     
@@ -140,14 +154,23 @@ class PostCreationContainer extends Component{
     render(){
         
         return(
+          <div>    
+            <Header
+             userName={this.state.userName}
+             image={this.state.image}
+             onChangeImage={this.onFileChangeHandler}
+            />
             <PostCreationComponent
               postId={this.state.postId}
               postText={this.state.postText}
+              photo={this.state.photo}
+              noText={this.state.noText}
               onTextChange={this.handleChange}
               onPhotoChange={this.handlePhoto}
               onSubmit={this.handleSubmit}
               onUpdate={this.handleUpdate}
             />
+           </div>    
         )
     }
     
