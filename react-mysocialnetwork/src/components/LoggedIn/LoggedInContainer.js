@@ -9,7 +9,7 @@ class LoggedInContainer extends Component{
         super(props);
         this.state = {
             
-            userName: "",
+            userName: this.props.location.state.userName,
             image: "",
             selectedImage: "",
             firstPostText: "",
@@ -22,7 +22,11 @@ class LoggedInContainer extends Component{
             firstCommentUsername: "",
             firstCommentPhoto: "",
             firstCommentText: "",
-            posts: []
+            searchParameter: "",
+            posts: [],
+            specificUserNamePostsNotFound: false,
+            specificContentNotFound: false,
+            chosenSearchOption: "searchByUsername"
             
             
         }
@@ -30,11 +34,11 @@ class LoggedInContainer extends Component{
     
     componentDidMount() {
         
-        if(this.props.location.state === undefined){
+        if(this.state.userName === undefined){
             
             this.props.history.push("/unauthorized");
         } else{
-            this.setState({userName: this.props.location.state.userName })
+            
             axios.get("http://localhost:8080/user/" + this.props.location.state.userName)
               .then(res => {this.setState({image: res.data.userPhoto})});
             axios.get("http://localhost:8080/getPost")
@@ -116,12 +120,72 @@ class LoggedInContainer extends Component{
         
     }
     
+    onSearchParameterChange = (e) => {
+        e.preventDefault();
+        this.setState({searchParameter: e.target.value})
+    }
+    
+    handleSearchOptionChange = (e) => {
+        e.preventDefault();
+        this.setState({chosenSearchOption: e.target.value})
+    }
+    
+    handeSearch = (e) => {
+        e.preventDefault();
+        axios.get("http://localhost:8080/posts/" + this.state.chosenSearchOption + "/" + this.state.searchParameter)
+         .then(res => {
+            this.setState({posts: res.data});
+            
+            if(res.data.length === 0){
+                if(this.state.chosenSearchOption === "searchByUsername"){
+                     this.setState({specificUserNamePostsNotFound: true})
+                 }else{
+                     this.setState({specificContentNotFound: true})
+                 }
+                this.timer = setTimeout(() => {
+                this.setState({searchParameter: ""})
+                this.setState({specificUserNamePostsNotFound: false})
+                    this.setState({specificContentNotFound: false})
+                axios.get("http://localhost:8080/posts")
+                    
+                  .then(res => {this.setState({posts: res.data})});  
+                  }, 5000);
+            }else{
+                this.setState({searchParameter: ""})
+            }
+            
+            
+        })
+        
+        
+    }
+    
     render(){
         
         return(
             
             <div className="container">
               <div className="row">
+            
+                <form className="form" onSubmit={this.handeSearch}>
+                <div className="form-group">
+                <label htmlFor="parameter">Paieška pagal</label>
+                <select value={this.state.chosenSearchOption} onChange={this.handleSearchOptionChange}>
+                  <option value="searchByUsername">vartotojo vardą</option>
+                  <option value="searchByContent">pranešimo turinį</option>
+                 </select>
+                <input
+                name="parameter"
+                value={this.state.searchParameter}
+                onChange={this.onSearchParameterChange}
+                ></input>
+                </div>
+
+               <button className="btn btn-primary mb-4">
+               Ieškoti
+               </button>
+               </form>
+            
                 <div className="col-3">
                   <input id="photoUpload" type="file" className="form-control" name="file" onChange={this.onFileChangeHandler}/>
                 </div>
@@ -138,6 +202,17 @@ class LoggedInContainer extends Component{
                   </div>
                 </div>
               </div>
+              {this.state.specificUserNamePostsNotFound && (
+                <div className="alert alert-danger col-12" role="alert">
+                  Nerasta jokių {this.state.searchParameter} vartotojo pranešimų arba toks vartotojas neegzistuoja
+                </div>
+              )}
+              {this.state.specificContentNotFound && (
+                <div className="alert alert-danger col-12" role="alert">
+                  Nerasta jokių pranešimų su ieškotu turiniu
+                </div>
+              )}
+
               <PostList
                 posts={this.state.posts}
                 userName={this.state.userName}

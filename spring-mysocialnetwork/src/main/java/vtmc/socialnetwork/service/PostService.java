@@ -162,6 +162,30 @@ public class PostService {
 		return postDtos;
 	}
 	
+	public List<PostDto> getPosts(String username){
+		
+		List<Post> posts = postDao.findAll();
+		List<PostDto> postDtos = posts.stream().filter(post -> post.getPoster().getUserName().equals(username))
+				.map(post -> new PostDto(post.getId(), post.getPoster().getUserName(),
+			post.getPoster().getUserPhoto(), post.getDate(), post.getText(),post.getPicture(), post.getLikes().size(),
+			post.getCommentDto()))
+			.collect(Collectors.toList());
+		
+		return postDtos;
+	}
+	
+	public List<PostDto> searchKeywordsInPosts(String text){
+		
+		List<Post> posts = postDao.findAll();
+		List<PostDto> postDtos = posts.stream().filter(post -> post.getText().contains(text))
+				.map(post -> new PostDto(post.getId(), post.getPoster().getUserName(),
+			post.getPoster().getUserPhoto(), post.getDate(), post.getText(),post.getPicture(), post.getLikes().size(),
+			post.getCommentDto()))
+			.collect(Collectors.toList());
+		
+		return postDtos;
+	}		
+	
 
 	
 	

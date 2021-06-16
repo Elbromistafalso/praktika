@@ -71,6 +71,18 @@ public class PostController {
         return postService.getPosts();
     }
 	
+	@RequestMapping(path = "/posts/searchByUsername/{userName}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+    public List<PostDto> getPosts(@PathVariable String userName) {
+        return postService.getPosts(userName);
+    }
+	
+	@RequestMapping(path = "/posts/searchByContent/{text}", method = RequestMethod.GET)
+	@ResponseStatus(HttpStatus.OK)
+    public List<PostDto> searchKeywordsinPosts(@PathVariable String text) {
+        return postService.searchKeywordsInPosts(text);
+    }		
+	
 	@RequestMapping(path = "/post/addLike/{postId}/{userName}", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> addLike(@PathVariable final long postId, @PathVariable final String userName) {
