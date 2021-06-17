@@ -10,13 +10,16 @@ let CommentList = ({
   
           comments.map(comment => {
            
-           return <Comment
+           return( 
+               
+               <Comment
                      id={comment.id}
                      userName={comment.userName}
                      userPhoto={comment.userPhoto}
                      text={comment.text}
                     />
            
+               )
           })
 
 )

@@ -57,7 +57,13 @@ public class PostController {
     public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestParam("text") String text,
     		@RequestParam("photo") MultipartFile file) {
         return postService.updatePost(postId, text, file);
-    }	
+	}
+	
+	@RequestMapping(path = "/post/updateWithoutPhoto/{postId}", method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> updatePost(@PathVariable Long postId, @RequestBody PostDto postDto) {
+        return postService.updatePost(postId, postDto);
+    }		
 	
 	@RequestMapping(path = "/getPost/{postId}", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)

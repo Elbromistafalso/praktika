@@ -96,7 +96,17 @@ public class PostService {
 		postDao.save(post);
 		return new ResponseEntity<>("The post " + post.getPoster().getUserName() + 
 				" with id " + post.getId() + " was updated", HttpStatus.OK);
-	}	
+	}
+	
+	public ResponseEntity<?> updatePost(Long postId, PostDto postDto){
+		
+		Post post = postDao.getOne(postId);
+		post.setText(postDto.getText());
+		post.setPicture(null);
+		postDao.save(post);
+		return new ResponseEntity<>("The post " + post.getPoster().getUserName() + 
+				" with id " + post.getId() + " was updated", HttpStatus.OK);
+	}		
 	
 	public ResponseEntity<?> deletePost(Long postId){
 		

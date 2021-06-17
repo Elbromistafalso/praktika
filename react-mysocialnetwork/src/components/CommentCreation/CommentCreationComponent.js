@@ -13,16 +13,16 @@ let CommentCreationComponent = ({
           <div className="row">
             <div className="col">
               <form onSubmit={onSubmit}>
-                <label>
-                    Komentaro tekstas:
+                    <p className="mb-0">Komentaro tekstas:</p>
                     <textarea value={commentText} style={{width: "500px", height: "300px"}} onChange={onTextChange} />
-                 </label>
-                 <input type="submit" value="Sukurti"/>
+                 <button className="btn btn-primary ml-2">Parašyti komentarą</button>
               </form>
             </div>
           </div>
         </div>
     )
+    
+    
 }
 
 export default CommentCreationComponent;

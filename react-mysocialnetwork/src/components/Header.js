@@ -15,7 +15,7 @@ let Header = ({
         
               <div className="row">
                 <div className="col text-right">
-                    <button className="btn btn-primary mt-5 mr-4" onClick={() => {document.getElementById("photoUpload").click();}}>Pakeisti nuotrauka</button>
+                    <button className="btn btn-primary mt-5 mr-4" onClick={() => {document.getElementById("photoUpload").click();}}>Pakeisti nuotrauką</button>
                   <input style={{display: 'none'}} id="photoUpload" type="file" className="form-control" name="file" onChange={onChangeImage}/>
                     <img style={{width: 100, height: 140}} src={"data:image/png;base64,"+image}/>
                   <p>{userName}</p>

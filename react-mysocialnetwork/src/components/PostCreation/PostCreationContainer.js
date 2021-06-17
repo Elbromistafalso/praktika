@@ -35,7 +35,7 @@ class PostCreationContainer extends Component{
                   .then((res) => {
                     
                     this.setState({postText: res.data.text });
-                    this.setState({photo: res.data.photo});
+                    this.setState({photo: ""});
              
            });
                 
@@ -56,6 +56,10 @@ class PostCreationContainer extends Component{
             photo: e.target.files[0]
         });
         
+    }
+    
+    handlePhotoRemove = () => {
+        this.state({photo: ""})
     }
 
     handleSubmit = (e) => {
@@ -101,15 +105,17 @@ class PostCreationContainer extends Component{
       }
           
       }
+        
   }
     
     handleUpdate = (e) => {
       e.preventDefault();
         
+        
       if(this.state.postText === ""){
           this.setState({noText: true})
-      }else{         
-        
+      }else{
+           
         
       if(this.state.photo !== ""){
           
@@ -136,7 +142,7 @@ class PostCreationContainer extends Component{
       }
       
       
-      axios.post("http://localhost:8080/post/create/" + this.props.location.state.userName, postDto)
+      axios.put("http://localhost:8080/post/updateWithoutPhoto/" + this.state.postId, postDto)
         .then(() => {
           this.timer = setTimeout(() => {
             this.props.history.push({pathname:"/loggedIn", state: {userName: this.state.userName}})
@@ -146,6 +152,7 @@ class PostCreationContainer extends Component{
       }        
         
       }
+    
         
     }
     
@@ -169,6 +176,7 @@ class PostCreationContainer extends Component{
               onPhotoChange={this.handlePhoto}
               onSubmit={this.handleSubmit}
               onUpdate={this.handleUpdate}
+              onPhotoRemove={this.handlePhotoRemove}
             />
            </div>    
         )

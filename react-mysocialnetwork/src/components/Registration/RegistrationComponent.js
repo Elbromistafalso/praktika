@@ -1,5 +1,6 @@
 import React from "react";
 import Proptypes from "prop-types";
+import {almostCentered} from "../../styles";
 
 let RegistrationComponent = ({
   username,
@@ -17,10 +18,10 @@ let RegistrationComponent = ({
   onSecondPasswordChange
 }) => {
   return (
-    <div className="row">
-      <div id="loginForm" className="offset-2 col-8">
+    <div style={almostCentered} className="row">
+      <div className="offset-2 col-12">
         <h3 className="text-info pt">MySocialNetwork</h3>
-        <h3 id="loginh1">Registracija</h3>
+        <h3>Registracija</h3>
         <form className="form" onSubmit={onSubmit}>
           <div className="form-group">
             <label htmlFor="username">Prisijungimo vardas: </label>

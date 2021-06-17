@@ -8,6 +8,7 @@ let PostCreationComponent = ({
     noText,
     onTextChange,
     onPhotoChange,
+    onPhotoRemove,
     onSubmit,
     onUpdate
 }) => {
@@ -21,12 +22,13 @@ let PostCreationComponent = ({
                     Pranešimo tekstas:
                     <textarea value={postText} style={{width: "500px", height: "300px"}} onChange={onTextChange} />
                  </label>
-                 <input type="submit" value={postId === undefined ? "Sukurti" : "Atnaujinti"}/>
+                 <button className="btn btn-primary">{postId === undefined ? "Sukurti" : "Atnaujinti"}</button>
               </form>
             </div>
             <div className="col">
               <div className="form-group files color">
-                <input type="file" className="form-control" name="photo" onChange={onPhotoChange}/>
+                <button className="btn btn-primary mt-5 mr-4" onClick={() => {document.getElementById("photoUpload2").click();}}>Pridėti nuotrauką</button>
+                <input style={{display: 'none'}} id="photoUpload2" type="file" className="form-control" name="photo" onChange={onPhotoChange}/>
               </div>
             </div>
                 {noText && (

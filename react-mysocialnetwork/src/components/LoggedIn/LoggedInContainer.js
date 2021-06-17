@@ -116,7 +116,7 @@ class LoggedInContainer extends Component{
     
     handlePostEdit = (e) => {
         e.preventDefault();
-        this.props.history.push({pathname:"/postCreation", state: {userName: this.state.userName, postId: e.target.value}})
+        this.props.history.push({pathname:"/postCreation", state: {userName: this.state.userName, postId: e.target.value, image: this.state.image}})
         
         
     }
@@ -172,19 +172,9 @@ class LoggedInContainer extends Component{
              image={this.state.image}
              onChangeImage={this.onFileChangeHandler}
             />
-              {this.state.specificUserNamePostsNotFound && (
-                <div className="alert alert-danger col-12" role="alert">
-                  Nerasta jokių {this.state.searchParameter} vartotojo pranešimų arba toks vartotojas neegzistuoja
-                </div>
-              )}
-              {this.state.specificContentNotFound && (
-                <div className="alert alert-danger col-12" role="alert">
-                  Nerasta jokių pranešimų su ieškotu turiniu
-                </div>
-              )}
 
                 <form className="form" onSubmit={this.handeSearch}>
-                  <div className="form-group">
+                  <div className="form-group mb-4">
                     <label htmlFor="parameter">Pranešimų paieška pagal</label>
                     <select className="mx-2" value={this.state.chosenSearchOption} onChange={this.handleSearchOptionChange}>
                       <option value="searchByUsername">vartotojo vardą</option>
@@ -195,6 +185,17 @@ class LoggedInContainer extends Component{
                     <button className="btn btn-primary mb-3" onClick={() => {this.props.history.push({pathname:"/postCreation", state: {userName: this.state.userName, image: this.state.image}})}}>Naujas pranešimas</button>
                   </div>
                </form>
+
+              {this.state.specificUserNamePostsNotFound && (
+                <div className="alert alert-danger col-12" role="alert">
+                  Nerasta jokių {this.state.searchParameter} vartotojo pranešimų arba toks vartotojas neegzistuoja
+                </div>
+              )}
+              {this.state.specificContentNotFound && (
+                <div className="alert alert-danger col-12" role="alert">
+                  Nerasta jokių pranešimų su ieškotu turiniu
+                </div>
+              )}
 
               <PostList
                 posts={this.state.posts}

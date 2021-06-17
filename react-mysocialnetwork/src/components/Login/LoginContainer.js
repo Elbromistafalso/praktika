@@ -74,6 +74,7 @@ class LoginContainer extends Component {
   render() {
     return (
           <LoginComponent
+            history={this.props.history}
             username={this.state.username}
             password={this.state.password}
             areCredentialsIncorrect={this.state.areCredentialsIncorrect}

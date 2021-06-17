@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { Component } from "react";
+import {withRouter} from 'react-router-dom';
 import RegistrationComponent from "./RegistrationComponent";
 
 
@@ -78,7 +79,12 @@ class RegistrationContainer extends Component {
     
       axios
         .post(`http://localhost:8080/user/registration`, newUser)
-        .then(() => { this.setState({successfulRegistration: true})})
+        .then(() => {
+          this.setState({successfulRegistration: true})
+          this.timer = setTimeout(() => {
+                this.props.history.push("/")
+              }, 3000);          
+      })
         .catch((e) => {
             console.log(e);
           });
@@ -138,4 +144,4 @@ class RegistrationContainer extends Component {
   }
 }
 
-export default RegistrationContainer;
+export default withRouter(RegistrationContainer);
