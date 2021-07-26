@@ -1,3 +1,5 @@
+(english manual to be added later)
+
 Paleidimo istrukcija:
 
 1. Susikurti tuščią folderį ir į jį užėjus per cmd paleisti "git clone https://github.com/Elbromistafalso/praktika.git" komandą.
